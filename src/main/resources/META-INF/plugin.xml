@@ -1,0 +1,46 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>app.arteh.StartupBuilder</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>StartupBuilder</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor url="https://www.arteh.app">Arteh</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+<b>StartupBuilder</b> automatically builds and updates your project as soon as it opens in IntelliJ IDEA.<br><br>
+
+It helps developers ensure their codebase and dependencies are always fresh right from startup — saving time and avoiding stale builds.<br><br>
+
+<b>Features:</b><br>
+• 🔄 Automatically triggers project build on startup<br>
+• 🧱 Performs optional Git fetch/pull before or after build<br>
+• 🔔 Plays a notification sound when finished (can be disabled in settings)<br>
+• ⚙️ Fully configurable via <i>Settings → StartupBuilder</i><br><br>
+
+<b>Ideal for:</b> developers who want to streamline their startup workflow or CI-like behavior within IntelliJ.<br><br>
+
+<a href="https://github.com/khordady/strartupbuilder">GitHub Repository</a>
+]]></description>
+
+    <projectListeners>
+        <listener
+                class="app.arteh.startupbuilder.MySyncListener"
+                topic="com.android.tools.idea.gradle.project.sync.GradleSyncListenerWithRoot"/>
+    </projectListeners>
+
+    <depends >com.intellij.modules.platform</depends>
+    <depends>Git4Idea</depends>
+    <depends>org.jetbrains.android</depends>
+    <depends>org.jetbrains.plugins.gradle</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable instance="app.arteh.startupbuilder.AutoBuildSettingsConfigurable"/>
+        <postStartupActivity implementation="app.arteh.startupbuilder.AutoBuildStartupActivity"/>
+    </extensions>
+</idea-plugin>
