@@ -1,5 +1,5 @@
 # StrartupBuilder
-<b>StartupBuilder</b> automatically builds and updates your project as soon as it opens in IntelliJ IDEA.<br><br>
+<b>StartupBuilder</b> automatically builds and updates your project as soon as it opens in Android Studio.<br><br>
 
 It helps developers ensure their codebase and dependencies are always fresh right from startup — saving time and avoiding stale builds.<br><br>
 
