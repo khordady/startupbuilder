@@ -25,7 +25,7 @@ It helps developers ensure their codebase and dependencies are always fresh righ
 
 <b>Ideal for:</b> developers who want to streamline their startup workflow or CI-like behavior within IntelliJ.<br><br>
 
-<a href="https://github.com/khordady/strartupbuilder">GitHub Repository</a>
+<a href="https://github.com/khordady/startupbuilder">GitHub Repository</a>
 ]]></description>
 
     <projectListeners>
