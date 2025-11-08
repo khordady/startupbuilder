@@ -14,20 +14,11 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
-import com.intellij.task.ProjectTaskManager
-import git4idea.commands.Git
-import git4idea.commands.GitLineHandler
-import git4idea.repo.GitRepository
-import git4idea.repo.GitRepositoryManager
 import kotlinx.coroutines.*
 import org.jetbrains.annotations.SystemIndependent
-import org.jetbrains.concurrency.await
-import java.io.BufferedInputStream
 import java.io.File
-import javax.sound.sampled.AudioSystem
-import javax.sound.sampled.Clip
 
-class MySyncListener(val project: Project) : GradleSyncListenerWithRoot {
+class MySyncListener : GradleSyncListenerWithRoot {
     private val log = Logger.getInstance("AutoBuildStartup")
 
     override fun syncSucceeded(
@@ -43,21 +34,23 @@ class MySyncListener(val project: Project) : GradleSyncListenerWithRoot {
                 override fun run(indicator: ProgressIndicator) {
                     log.info("AutoBuildOnStartup: Building started.")
 
-                    kotlinx.coroutines.runBlocking {
+                    runBlocking {
                         delay(2000)
+
+                        val extraStep = ExtraStep(project)
 
                         indicator.text = "Building project..."
                         buildProject(project)
 
                         indicator.text = "Fetching latest commits..."
-                        fetchGit(project)
+                        extraStep.fetchGit()
+
 
                         indicator.text = "Building again..."
                         buildProject(project)
 
                         indicator.text = "Done!"
-                        if (AutoBuildSettingsState.getInstance().state.playSound)
-                            maybePlaySound()
+                        extraStep.maybePlaySound()
                     }
                 }
             })
@@ -94,62 +87,12 @@ class MySyncListener(val project: Project) : GradleSyncListenerWithRoot {
         log.info("AutoBuildOnStartup: Project Synced cancelled.")
     }
 
-    private fun fetchGit(project: Project) {
-        val git = Git.getInstance()
-        val repoManager = GitRepositoryManager.getInstance(project)
-        val repositories: List<GitRepository> = repoManager.repositories
-
-        repositories.forEach { repo ->
-            val handler = GitLineHandler(project, repo.root, git4idea.commands.GitCommand.FETCH)
-            git.runCommand(handler)
-        }
-    }
-
-    fun maybePlaySound() {
-        try {
-            try {
-                val resource = javaClass.getResourceAsStream("/success.wav")
-                if (resource != null) {
-                    // Wrap the stream so mark/reset works
-                    val bufferedStream = BufferedInputStream(resource)
-
-                    val audioInput = AudioSystem.getAudioInputStream(bufferedStream)
-                    val clip: Clip = AudioSystem.getClip()
-                    clip.open(audioInput)
-                    clip.start()
-
-                    audioInput.close()
-                } else {
-                    println("Sound resource not found!")
-                }
-            } catch (e: Exception) {
-                println("Failed to play sound: ${e.message}")
-                e.printStackTrace()
-            }
-        } catch (e: Exception) {
-            println("Failed to play sound: ${e.message}")
-        }
-    }
-
     suspend fun buildProject(project: Project) {
         val hasGradle = isGradleProject(project)
 
         if (hasGradle) {
             waitUntilProjectReadyForBuild(project)
             buildWithGradle(project, getGradleSystemId())
-        } else {
-            buildWithIntelliJ(project)
-        }
-    }
-
-    private suspend fun buildWithIntelliJ(project: Project) {
-        val taskManager = ProjectTaskManager.getInstance(project)
-        val result = taskManager.buildAllModules().await()
-
-        when {
-            result.isAborted -> log.info("Build aborted!")
-            result.hasErrors() -> log.info("Build failed!")
-            else -> log.info("Build completed successfully!")
         }
     }
 
