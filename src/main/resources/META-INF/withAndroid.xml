@@ -1,0 +1,7 @@
+<idea-plugin>
+    <projectListeners>
+        <listener
+                class="app.arteh.startupbuilder.MySyncListener"
+                topic="com.android.tools.idea.gradle.project.sync.GradleSyncListenerWithRoot"/>
+    </projectListeners>
+</idea-plugin>
