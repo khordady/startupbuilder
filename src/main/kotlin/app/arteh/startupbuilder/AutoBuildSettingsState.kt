@@ -1,17 +1,14 @@
 package app.arteh.startupbuilder
 
-import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.Storage
-import com.intellij.openapi.components.State
-import com.intellij.openapi.components.service
+import com.intellij.openapi.components.*
 
 @Service(Service.Level.APP)
 @State(name = "AutoBuildSettings", storages = [Storage("autoBuildSettings.xml")])
 class AutoBuildSettingsState : PersistentStateComponent<AutoBuildSettingsState.State> {
 
     data class State(
-        var playSound: Boolean = true
+        var playSound: Boolean = true,
+        var gitMerge: Boolean = false,
     )
 
     private var state = State()
