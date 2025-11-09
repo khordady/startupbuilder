@@ -61,7 +61,7 @@ class IntellijBuildService(private val project: Project, private val scope: Coro
     }
 
     private fun isMavenProject(project: Project): Boolean {
-        val pluginId = PluginId.findId("org.jetbrains.idea.maven") ?: return false
+        val pluginId = PluginId.getId("org.jetbrains.idea.maven")
         if (!PluginManager.isPluginInstalled(pluginId)) return false
         return project.baseDir?.findChild("pom.xml") != null
     }
