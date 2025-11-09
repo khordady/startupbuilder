@@ -105,7 +105,8 @@ class IntellijBuildService(private val project: Project, private val scope: Coro
                             extraStep.fetchGit()
                             runGradleBuild(2, taskSettings)
                         }
-                    } else extraStep.maybePlaySound()
+                    }
+                    else extraStep.maybePlaySound()
                 }
 
                 override fun onFailure() {
@@ -114,7 +115,8 @@ class IntellijBuildService(private val project: Project, private val scope: Coro
                             extraStep.fetchGit()
                             runGradleBuild(2, taskSettings)
                         }
-                    } else extraStep.maybePlaySound()
+                    }
+                    else extraStep.maybePlaySound()
                 }
             }, ProgressExecutionMode.IN_BACKGROUND_ASYNC
         )
@@ -142,7 +144,8 @@ class IntellijBuildService(private val project: Project, private val scope: Coro
                         extraStep.fetchGit()
                         runMavenBuild(2, processBuilder)
                     }
-                } else extraStep.maybePlaySound()
+                }
+                else extraStep.maybePlaySound()
             } catch (e: Exception) {
                 log.error("Maven build failed", e)
             }
@@ -163,7 +166,8 @@ class IntellijBuildService(private val project: Project, private val scope: Coro
                         }
 
                         buildJps(2, project)
-                    } else extraStep.maybePlaySound()
+                    }
+                    else extraStep.maybePlaySound()
                 }
             }
             future.onError {
@@ -174,7 +178,8 @@ class IntellijBuildService(private val project: Project, private val scope: Coro
                         }
 
                         buildJps(2, project)
-                    } else extraStep.maybePlaySound()
+                    }
+                    else extraStep.maybePlaySound()
                 }
             }
         }

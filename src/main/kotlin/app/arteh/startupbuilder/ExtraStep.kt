@@ -4,13 +4,13 @@ import com.intellij.ide.plugins.PluginManager
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.EDT
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.ProjectLevelVcsManager
 import git4idea.GitVcs
+import git4idea.branch.GitRebaseParams
 import git4idea.commands.Git
-import git4idea.commands.GitCommand
-import git4idea.commands.GitLineHandler
 import git4idea.fetch.GitFetchSupport
 import git4idea.repo.GitRepository
 import git4idea.repo.GitRepositoryManager
@@ -20,8 +20,14 @@ import java.io.BufferedInputStream
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 
-class ExtraStep(private val project: Project) {
+class ExtraStep() {
 
+    constructor(project: Project) : this() {
+        this.project = project
+    }
+
+    private lateinit var project: Project
+    private val log = Logger.getInstance(ExtraStep::class.java)
     private val pluginSettings = AutoBuildSettingsState.getInstance()
 
     fun isGitEnabled(): Boolean {
@@ -44,6 +50,7 @@ class ExtraStep(private val project: Project) {
 
     suspend fun fetchGit() {
         if (!isGitEnabled()) return
+        if (pluginSettings.state.gitMerge == GitMergeStrategy.NONE) return
 
         val git = Git.getInstance()
         val repoManager = GitRepositoryManager.getInstance(project)

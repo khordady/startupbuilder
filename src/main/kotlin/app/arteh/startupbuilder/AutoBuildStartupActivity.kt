@@ -20,7 +20,8 @@ class AutoBuildStartupActivity : ProjectActivity {
         if (appName.contains("Android Studio", ignoreCase = true) || productCode.startsWith("AI")) {
             log.info("AutoBuildOnStartup: is Android studio, then leave it to sync listener.")
             return
-        } else
+        }
+        else
             log.info("AutoBuildOnStartup: is not Android studio. then check build system")
 
         val intellijBuildService = project.getService(IntellijBuildService::class.java)
