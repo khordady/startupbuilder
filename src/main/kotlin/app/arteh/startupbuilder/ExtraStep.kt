@@ -110,29 +110,23 @@ class ExtraStep(private val project: Project) {
         }
     }
 
-    fun maybePlaySound() {
-        if (!pluginSettings.state.playSound) return
+    fun maybePlaySound(audio: AudioDone = pluginSettings.state.playSound) {
+        if (audio == AudioDone.NONE) return
 
         try {
-            try {
-                val resource = javaClass.getResourceAsStream("/success.wav")
-                if (resource != null) {
-                    // Wrap the stream so mark/reset works
-                    val bufferedStream = BufferedInputStream(resource)
+            val resource = javaClass.getResourceAsStream("/${audio.displayName}.wav")
+            if (resource != null) {
+                // Wrap the stream so mark/reset works
+                val bufferedStream = BufferedInputStream(resource)
 
-                    val audioInput = AudioSystem.getAudioInputStream(bufferedStream)
-                    val clip: Clip = AudioSystem.getClip()
-                    clip.open(audioInput)
-                    clip.start()
+                val audioInput = AudioSystem.getAudioInputStream(bufferedStream)
+                val clip: Clip = AudioSystem.getClip()
+                clip.open(audioInput)
+                clip.start()
 
-                    audioInput.close()
-                } else {
-                    println("Sound resource not found!")
-                }
-            } catch (e: Exception) {
-                println("Failed to play sound: ${e.message}")
-                e.printStackTrace()
+                audioInput.close()
             }
+            else println("Sound resource not found!")
         } catch (e: Exception) {
             println("Failed to play sound: ${e.message}")
         }
