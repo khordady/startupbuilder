@@ -101,15 +101,19 @@ class IntellijBuildService(private val project: Project, private val scope: Coro
             GradleConstants.SYSTEM_ID, object : TaskCallback {
                 override fun onSuccess() {
                     if (step == 1) {
-                        extraStep.fetchGit()
-                        runGradleBuild(2, taskSettings)
+                        scope.launch(Dispatchers.IO) {
+                            extraStep.fetchGit()
+                            runGradleBuild(2, taskSettings)
+                        }
                     } else extraStep.maybePlaySound()
                 }
 
                 override fun onFailure() {
                     if (step == 1) {
-                        extraStep.fetchGit()
-                        runGradleBuild(2, taskSettings)
+                        scope.launch(Dispatchers.IO) {
+                            extraStep.fetchGit()
+                            runGradleBuild(2, taskSettings)
+                        }
                     } else extraStep.maybePlaySound()
                 }
             }, ProgressExecutionMode.IN_BACKGROUND_ASYNC
@@ -134,8 +138,10 @@ class IntellijBuildService(private val project: Project, private val scope: Coro
                 process.waitFor()
 
                 if (step == 1) {
-                    extraStep.fetchGit()
-                    runMavenBuild(2, processBuilder)
+                    scope.launch(Dispatchers.IO) {
+                        extraStep.fetchGit()
+                        runMavenBuild(2, processBuilder)
+                    }
                 } else extraStep.maybePlaySound()
             } catch (e: Exception) {
                 log.error("Maven build failed", e)
