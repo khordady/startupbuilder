@@ -7,8 +7,8 @@ import com.intellij.openapi.components.*
 class AutoBuildSettingsState : PersistentStateComponent<AutoBuildSettingsState.State> {
 
     data class State(
-        var playSound: Boolean = true,
-        var gitMerge: Boolean = false,
+        var playSound: AudioDone = AudioDone.M1,
+        var gitMerge: GitMergeStrategy = GitMergeStrategy.NONE,
     )
 
     private var state = State()
