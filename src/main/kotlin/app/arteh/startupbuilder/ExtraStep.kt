@@ -1,14 +1,21 @@
 package app.arteh.startupbuilder
 
 import com.intellij.ide.plugins.PluginManager
+import com.intellij.notification.NotificationGroupManager
+import com.intellij.notification.NotificationType
+import com.intellij.openapi.application.EDT
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.ProjectLevelVcsManager
 import git4idea.GitVcs
 import git4idea.commands.Git
+import git4idea.commands.GitCommand
 import git4idea.commands.GitLineHandler
+import git4idea.fetch.GitFetchSupport
 import git4idea.repo.GitRepository
 import git4idea.repo.GitRepositoryManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.BufferedInputStream
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
@@ -35,19 +42,44 @@ class ExtraStep(private val project: Project) {
         return roots.isNotEmpty()
     }
 
-    fun fetchGit() {
+    suspend fun fetchGit() {
         if (!isGitEnabled()) return
 
         val git = Git.getInstance()
         val repoManager = GitRepositoryManager.getInstance(project)
         val repositories: List<GitRepository> = repoManager.repositories
 
+        val fetchResult = GitFetchSupport.fetchSupport(project).fetchAllRemotes(repositories)
+        if (fetchResult.showNotificationIfFailed()) return
+
         repositories.forEach { repo ->
-            val handler = if (pluginSettings.state.gitMerge)
-                GitLineHandler(project, repo.root, git4idea.commands.GitCommand.MERGE)
-            else
-                GitLineHandler(project, repo.root, git4idea.commands.GitCommand.REBASE)
-            git.runCommand(handler)
+            val currentBranch = repo.currentBranch?.name ?: return@forEach
+            if (currentBranch in listOf("master", "main")) return@forEach // skip protected branches
+
+            val branchToMerge = "origin/${repo.currentBranch?.name ?: return@forEach}"
+
+            if (pluginSettings.state.gitMerge) {
+                val result = git.merge(repo, branchToMerge, null)
+                if (!result.success()) gitFailed(repo)
+            } else {
+                val handler = GitLineHandler(project, repo.root, GitCommand.REBASE)
+                handler.addParameters("origin/master")
+                val result = git.runCommand(handler)
+
+                if (!result.success()) gitFailed(repo)
+            }
+        }
+    }
+
+    private suspend fun gitFailed(repo: GitRepository) {
+        withContext(Dispatchers.EDT) {
+            NotificationGroupManager.getInstance()
+                .getNotificationGroup("Startup Buildr")
+                .createNotification(
+                    "Merge or rebase failed for ${repo.presentableUrl}. Please pull and resolve conflicts manually.",
+                    NotificationType.WARNING
+                )
+                .notify(project);
         }
     }
 
