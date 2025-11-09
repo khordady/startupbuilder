@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "app.arteh"
-version = "0.0.2"
+version = "0.0.3"
 
 repositories {
     mavenCentral()
@@ -31,8 +31,8 @@ intellijPlatform {
         }
 
         changeNotes = """
-      Added support for IntelliJ IDEA
-      Added Merge/Rebase option in settings
+      Improved Git operation \n
+      Added more Audios
     """.trimIndent()
     }
 }
