@@ -32,5 +32,6 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable instance="app.arteh.startupbuilder.AutoBuildSettingsConfigurable"/>
         <postStartupActivity implementation="app.arteh.startupbuilder.AutoBuildStartupActivity"/>
+        <notificationGroup id="Startup Buildr" displayType="BALLOON" />
     </extensions>
 </idea-plugin>
