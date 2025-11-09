@@ -23,7 +23,7 @@ class AutoBuildStartupActivity : ProjectActivity {
         } else
             log.info("AutoBuildOnStartup: is not Android studio. then check build system")
 
-        val buildAndGitService = project.getService(BuildAndGitService::class.java)
-        buildAndGitService.run()
+        val intellijBuildService = project.getService(IntellijBuildService::class.java)
+        intellijBuildService.run()
     }
 }

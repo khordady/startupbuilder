@@ -24,8 +24,8 @@ import org.jetbrains.plugins.gradle.settings.GradleSettings
 import org.jetbrains.plugins.gradle.util.GradleConstants
 
 @Service(Service.Level.PROJECT)
-class BuildAndGitService(private val project: Project, private val scope: CoroutineScope) {
-    private val log = Logger.getInstance(BuildAndGitService::class.java)
+class IntellijBuildService(private val project: Project, private val scope: CoroutineScope) {
+    private val log = Logger.getInstance(IntellijBuildService::class.java)
     private val extraStep = ExtraStep(project)
 
     fun run() {
