@@ -50,33 +50,60 @@ class ExtraStep(private val project: Project) {
         val repositories: List<GitRepository> = repoManager.repositories
 
         val fetchResult = GitFetchSupport.fetchSupport(project).fetchAllRemotes(repositories)
-        if (fetchResult.showNotificationIfFailed()) return
+        if (!fetchResult.showNotificationIfFailed()) {
+            gitFailed("", "Fetch command failed")
+            return
+        }
 
         repositories.forEach { repo ->
-            val currentBranch = repo.currentBranch?.name ?: return@forEach
-            if (currentBranch in listOf("master", "main")) return@forEach // skip protected branches
+            if (repo.currentBranch == null || repo.currentBranch?.name == null) return@forEach
 
-            val branchToMerge = "origin/${repo.currentBranch?.name ?: return@forEach}"
+            val branchToMerge = "origin/${repo.currentBranch!!.name}"
 
-            if (pluginSettings.state.gitMerge) {
+            if (pluginSettings.state.gitMerge == GitMergeStrategy.MERGE) {
                 val result = git.merge(repo, branchToMerge, null)
-                if (!result.success()) gitFailed(repo)
-            } else {
-                val handler = GitLineHandler(project, repo.root, GitCommand.REBASE)
-                handler.addParameters("origin/master")
-                val result = git.runCommand(handler)
+                if (!result.success()) {
+                    log.info("Merge failed. ${result.exitCode}")
 
-                if (!result.success()) gitFailed(repo)
+                    val name = if (repo.currentBranch != null) repo.currentBranch!!.name
+                    else repo.presentableUrl
+                    gitFailed(name, result.errorOutputAsJoinedString)
+
+                    result.exitCode
+
+                }
+                else
+                    log.info("Merge succeed")
+            }
+            else if (pluginSettings.state.gitMerge == GitMergeStrategy.REBASE) {
+                val trackingBranch = repo.currentBranch?.findTrackedBranch(repo)
+                val upstream = trackingBranch?.nameForLocalOperations ?: "origin/master"
+
+                log.info("AutoBuildOnStartup: upstream is $upstream")
+
+                val params = GitRebaseParams(version = GitVcs.getInstance(project).version, upstream = upstream)
+                val result = git.rebase(repo, params)
+
+                if (!result.success()) {
+                    log.info("Rebase failed. ${result.exitCode}")
+
+                    val name = if (repo.currentBranch != null) repo.currentBranch!!.name
+                    else repo.presentableUrl
+                    gitFailed(name, result.errorOutputAsJoinedString)
+                }
+                else
+                    log.info("Rebase succeed")
             }
         }
     }
 
-    private suspend fun gitFailed(repo: GitRepository) {
+    private suspend fun gitFailed(repoName: String, error: String) {
         withContext(Dispatchers.EDT) {
             NotificationGroupManager.getInstance()
                 .getNotificationGroup("Startup Buildr")
                 .createNotification(
-                    "Merge or rebase failed for ${repo.presentableUrl}. Please pull and resolve conflicts manually.",
+                    "Git operations failed for $repoName. Please update project manually.\n" +
+                            "Error: $error",
                     NotificationType.WARNING
                 )
                 .notify(project);
