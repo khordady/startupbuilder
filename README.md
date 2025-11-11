@@ -8,3 +8,5 @@
 • ⚙️ Fully configurable via <i>Settings → Other Settings → StartupBuilder</i><br><br>
 
 To create a self-published version, import it to IntelliJ IDEA and install plugin "Plugin Devkit" .
+
+<a href="https://www.linkedin.com/in/aliforootanseresht/">My LinkedIn</a>
