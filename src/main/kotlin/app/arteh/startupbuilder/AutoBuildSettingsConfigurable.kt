@@ -61,7 +61,7 @@ class AutoBuildSettingsConfigurable : Configurable {
     }
 
     override fun reset() {
-        audioCombo.selectedItem = AudioDone.NONE
-        gitCombo.selectedItem = GitMergeStrategy.NONE
+        audioCombo.selectedItem = AudioDone.M1
+        gitCombo.selectedItem = GitMergeStrategy.MERGE
     }
 }
