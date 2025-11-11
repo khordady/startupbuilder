@@ -31,7 +31,7 @@ intellijPlatform {
         }
 
         changeNotes = """
-      Improved Git operation \n
+      Improved Git operation
       Added more Audios
     """.trimIndent()
     }
