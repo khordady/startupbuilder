@@ -8,7 +8,7 @@ class AutoBuildSettingsState : PersistentStateComponent<AutoBuildSettingsState.S
 
     data class State(
         var playSound: AudioDone = AudioDone.M1,
-        var gitMerge: GitMergeStrategy = GitMergeStrategy.NONE,
+        var gitMerge: GitMergeStrategy = GitMergeStrategy.MERGE,
     )
 
     private var state = State()
