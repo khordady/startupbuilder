@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "app.arteh"
-version = "0.0.3"
+version = "0.0.4"
 
 repositories {
     mavenCentral()
@@ -31,8 +31,7 @@ intellijPlatform {
         }
 
         changeNotes = """
-      Improved Git operation
-      Added more Audios
+      Added ToolWindow button to list & build protobuf files in android studio
     """.trimIndent()
     }
 }
