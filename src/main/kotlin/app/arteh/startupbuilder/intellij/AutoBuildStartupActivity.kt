@@ -1,4 +1,4 @@
-package app.arteh.startupbuilder
+package app.arteh.startupbuilder.intellij
 
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.diagnostic.Logger

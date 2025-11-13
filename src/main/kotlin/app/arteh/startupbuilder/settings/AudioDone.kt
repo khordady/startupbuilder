@@ -1,4 +1,4 @@
-package app.arteh.startupbuilder
+package app.arteh.startupbuilder.settings
 
 enum class AudioDone(val displayName: String) {
     NONE("None"),

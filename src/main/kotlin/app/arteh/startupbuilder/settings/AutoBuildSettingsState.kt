@@ -1,4 +1,4 @@
-package app.arteh.startupbuilder
+package app.arteh.startupbuilder.settings
 
 import com.intellij.openapi.components.*
 

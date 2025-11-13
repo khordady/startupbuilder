@@ -1,5 +1,6 @@
-package app.arteh.startupbuilder
+package app.arteh.startupbuilder.android
 
+import app.arteh.startupbuilder.ExtraStep
 import com.android.tools.idea.gradle.project.sync.GradleSyncListenerWithRoot
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.openapi.application.ApplicationManager

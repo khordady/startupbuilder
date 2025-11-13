@@ -1,10 +1,10 @@
-package app.arteh.startupbuilder
+package app.arteh.startupbuilder.settings
 
+import app.arteh.startupbuilder.ExtraStep
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.util.maximumHeight
 import com.intellij.ui.util.maximumWidth
-import java.awt.FlowLayout
 import javax.swing.BoxLayout
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -15,35 +15,38 @@ class AutoBuildSettingsConfigurable : Configurable {
     private val gitCombo = ComboBox(GitMergeStrategy.entries.toTypedArray())
 
     private var column = JPanel()
+    private var lastAudioSelected: AudioDone? = null
 
     init {
+        gitCombo.maximumHeight = 40
+        audioCombo.maximumHeight = 40
+
         gitCombo.maximumWidth = 120
         audioCombo.maximumWidth = 120
 
+        column.layout = BoxLayout(column, BoxLayout.Y_AXIS)
 
-        column = column.apply {
-            layout = BoxLayout(this, BoxLayout.Y_AXIS)
-        }
-
-        val audioRow = JPanel(FlowLayout(FlowLayout.LEFT))
+        val audioRow = JPanel()
+        audioRow.layout = BoxLayout(audioRow, BoxLayout.X_AXIS)
         audioRow.add(JLabel("Play audio after done:"))
         audioRow.add(audioCombo)
-        audioRow.maximumHeight = 120
 
-        val gitRow = JPanel(FlowLayout(FlowLayout.LEFT))
+        val gitRow = JPanel()
+        gitRow.layout = BoxLayout(gitRow, BoxLayout.X_AXIS)
         gitRow.add(JLabel("Git Sync Strategy:"))
         gitRow.add(gitCombo)
-        gitRow.maximumHeight = 120
 
         column.add(audioRow)
         column.add(gitRow)
 
-        column.maximumHeight = 300
-
         audioCombo.addActionListener {
             val selected = audioCombo.selectedItem as AudioDone
 
-            ExtraStep().maybePlaySound(selected)
+            if (lastAudioSelected != null) {
+                ExtraStep().maybePlaySound(selected)
+            }
+
+            lastAudioSelected = selected
         }
     }
 

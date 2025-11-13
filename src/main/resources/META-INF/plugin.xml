@@ -25,14 +25,14 @@
 <a href="https://www.linkedin.com/in/aliforootanseresht/">LinkedIn</a>
 ]]></description>
 
-    <depends >com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.platform</depends>
     <depends>Git4Idea</depends>
     <depends optional="true" config-file="withAndroid.xml">org.jetbrains.android</depends>
     <depends>org.jetbrains.plugins.gradle</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationConfigurable instance="app.arteh.startupbuilder.AutoBuildSettingsConfigurable"/>
-        <postStartupActivity implementation="app.arteh.startupbuilder.AutoBuildStartupActivity"/>
-        <notificationGroup id="Startup Buildr" displayType="BALLOON" />
+        <applicationConfigurable instance="app.arteh.startupbuilder.settings.AutoBuildSettingsConfigurable"/>
+        <postStartupActivity implementation="app.arteh.startupbuilder.intellij.AutoBuildStartupActivity"/>
+        <notificationGroup id="Startup Buildr" displayType="BALLOON"/>
     </extensions>
 </idea-plugin>

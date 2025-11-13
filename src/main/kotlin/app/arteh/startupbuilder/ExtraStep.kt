@@ -1,5 +1,8 @@
 package app.arteh.startupbuilder
 
+import app.arteh.startupbuilder.settings.AudioDone
+import app.arteh.startupbuilder.settings.AutoBuildSettingsState
+import app.arteh.startupbuilder.settings.GitMergeStrategy
 import com.intellij.ide.plugins.PluginManager
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType

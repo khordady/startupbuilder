@@ -1,5 +1,6 @@
-package app.arteh.startupbuilder
+package app.arteh.startupbuilder.intellij
 
+import app.arteh.startupbuilder.ExtraStep
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.ide.plugins.PluginManager
 import com.intellij.ide.plugins.PluginManagerCore
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.plugins.gradle.settings.GradleSettings
 import org.jetbrains.plugins.gradle.util.GradleConstants
+import java.io.File
 
 @Service(Service.Level.PROJECT)
 class IntellijBuildService(private val project: Project, private val scope: CoroutineScope) {
@@ -127,7 +129,7 @@ class IntellijBuildService(private val project: Project, private val scope: Coro
         // Since MavenProjectsManager API was removed, run via command
         val basePath = project.basePath ?: return
         val processBuilder = ProcessBuilder("mvn", "clean", "package")
-            .directory(java.io.File(basePath))
+            .directory(File(basePath))
 
         runMavenBuild(1, processBuilder)
     }

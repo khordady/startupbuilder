@@ -1,4 +1,4 @@
-package app.arteh.startupbuilder
+package app.arteh.startupbuilder.settings
 
 enum class GitMergeStrategy(val displayName: String) {
     NONE("None"),
