@@ -1,7 +1,15 @@
 <idea-plugin>
     <projectListeners>
         <listener
-                class="app.arteh.startupbuilder.MySyncListener"
+                class="app.arteh.startupbuilder.android.MySyncListener"
                 topic="com.android.tools.idea.gradle.project.sync.GradleSyncListenerWithRoot"/>
     </projectListeners>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Proto Builder"
+                    anchor="left"
+                    factoryClass="app.arteh.startupbuilder.android.ProtoToolWindowFactory"
+                    icon="/icons/proto_tool.svg"
+                    canCloseContents="false"/>
+    </extensions>
 </idea-plugin>
