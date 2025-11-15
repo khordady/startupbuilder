@@ -251,12 +251,13 @@ class ProtoToolWindowFactory : ToolWindowFactory {
         }
 
         val refreshItem = JMenuItem("Refresh list")
-        pasteFileItem.addActionListener {
+        refreshItem.addActionListener {
             reloadDirFiles(dirPath)
         }
 
         popup.add(addFileItem)
         popup.add(pasteFileItem)
+        popup.add(refreshItem)
 
         val menuButton = JButton(AllIcons.General.Menu)
         menuButton.isFocusPainted = false // removes focus outline
