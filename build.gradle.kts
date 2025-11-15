@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "app.arteh"
-version = "0.0.4"
+version = "0.0.5"
 
 repositories {
     mavenCentral()
@@ -31,7 +31,7 @@ intellijPlatform {
         }
 
         changeNotes = """
-      Added ToolWindow button to list & build protobuf files in android studio
+      Added more buttons for protobuf modules in toolwindow 
     """.trimIndent()
     }
 }
