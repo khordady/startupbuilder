@@ -20,7 +20,6 @@ import git4idea.repo.GitRepositoryManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedInputStream
-import java.io.File
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 
@@ -126,7 +125,7 @@ class ExtraStep() {
 
         try {
             val resource =
-                javaClass.getResourceAsStream("${File.separator}audio${File.separator}${audio.displayName}.wav")
+                javaClass.getResourceAsStream("/audio/${audio.displayName}.wav")
             if (resource != null) {
                 // Wrap the stream so mark/reset works
                 val bufferedStream = BufferedInputStream(resource)
