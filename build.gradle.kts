@@ -30,9 +30,8 @@ intellijPlatform {
             sinceBuild = "251"
         }
 
-        changeNotes = """
-      Added more buttons for protobuf modules in toolwindow 
-    """.trimIndent()
+        changeNotes =
+            "Added more Protobuf files controls in the tool window.\nAuto-build now runs even when Gradle skips sync."
     }
 }
 
