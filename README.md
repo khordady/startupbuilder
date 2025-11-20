@@ -19,9 +19,15 @@ B) Applies the selected action<br>
 5) Finally, the plugin tries to build the project again.
 
 ### ☕ <b>Why I Built This Plugin</b>
-
 The very first successful build in Android Studio takes a long time.
 With this plugin, you can sit back and enjoy a coffee ☕ while everything runs automatically.
+
+For faster builds in Android Studio, add the following lines to your gradle.properties file:
+```kotlin
+org.gradle.configuration-cache = true
+org.gradle.caching = true
+```
+Also make sure to enable Gradle’s parallel sync in the settings(all of them).
 
 To create a self-published version, import it to IntelliJ IDEA and install plugin "Plugin Devkit" .
 
