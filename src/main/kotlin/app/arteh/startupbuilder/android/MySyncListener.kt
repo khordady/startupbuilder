@@ -15,7 +15,10 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.jetbrains.annotations.SystemIndependent
 import java.io.File
 
@@ -30,6 +33,18 @@ class MySyncListener : GradleSyncListenerWithRoot {
 
         log.info("AutoBuildOnStartup: Project Synced finished.")
 
+        startBuild(project)
+    }
+
+    override fun syncSkipped(project: Project) {
+        super.syncSkipped(project)
+
+        log.info("AutoBuildOnStartup: Project Synced skipped.")
+
+        startBuild(project)
+    }
+
+    fun startBuild(project: Project) {
         ApplicationManager.getApplication().invokeLater {
             ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Auto Build & Fetch") {
                 override fun run(indicator: ProgressIndicator) {
@@ -58,41 +73,12 @@ class MySyncListener : GradleSyncListenerWithRoot {
         }
     }
 
-    override fun syncStarted(
-        project: Project,
-        rootProjectPath: @SystemIndependent String
-    ) {
-        super.syncStarted(project, rootProjectPath)
-
-        log.info("AutoBuildOnStartup: Project Synced started.")
-
-    }
-
-    override fun syncFailed(
-        project: Project,
-        errorMessage: String,
-        rootProjectPath: @SystemIndependent String
-    ) {
-        super.syncFailed(project, errorMessage, rootProjectPath)
-
-        log.info("AutoBuildOnStartup: Project Synced failed.")
-
-    }
-
-    override fun syncCancelled(
-        project: Project,
-        rootProjectPath: @SystemIndependent String
-    ) {
-        super.syncCancelled(project, rootProjectPath)
-
-        log.info("AutoBuildOnStartup: Project Synced cancelled.")
-    }
-
     suspend fun buildProject(project: Project) {
         val hasGradle = isGradleProject(project)
 
         if (hasGradle) {
             waitUntilProjectReadyForBuild(project)
+
             buildWithGradle(project, getGradleSystemId())
         }
     }
@@ -113,25 +99,25 @@ class MySyncListener : GradleSyncListenerWithRoot {
         val callback = object : TaskCallback {
             override fun onSuccess() {
                 log.info("Gradle build succeeded")
+
                 completion.complete(Unit)
             }
 
             override fun onFailure() {
                 log.warn("Gradle build failed:")
+
                 completion.complete(Unit)
             }
         }
 
-        withContext(Dispatchers.Default) {
-            ExternalSystemUtil.runTask(
-                settings,
-                DefaultRunExecutor.EXECUTOR_ID,
-                project,
-                systemId,
-                callback,
-                ProgressExecutionMode.IN_BACKGROUND_ASYNC
-            )
-        }
+        ExternalSystemUtil.runTask(
+            settings,
+            DefaultRunExecutor.EXECUTOR_ID,
+            project,
+            systemId,
+            callback,
+            ProgressExecutionMode.IN_BACKGROUND_ASYNC
+        )
 
         completion.await()
     }
