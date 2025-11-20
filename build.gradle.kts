@@ -31,7 +31,8 @@ intellijPlatform {
         }
 
         changeNotes =
-            "Added more Protobuf files controls in the tool window.\nAuto-build now runs even when Gradle skips sync."
+            "Added more Protobuf files controls in the tool window.\nAuto-build now runs even when Gradle skips sync.\n" +
+                    "First task runs Gradle build --profile , second task runs Gradle assembleDebug --profile"
     }
 }
 

@@ -30,7 +30,9 @@
 A) Fetches the latest Git changes<br>
 B) Applies the selected action<br>
 4) If something goes wrong (no internet, merge conflict, or uncommitted changes), a notification is shown.<br>
-5) Finally, the plugin tries to build the project again.
+5) Finally, the plugin tries to assembleDebug the project.
+
+You can check build time and reports in Android Studio.
 
 ### ☕ <b>Why I Built This Plugin</b>
 The very first successful build in Android Studio takes a long time.
