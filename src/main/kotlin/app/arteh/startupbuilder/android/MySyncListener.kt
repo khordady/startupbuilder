@@ -56,14 +56,14 @@ class MySyncListener : GradleSyncListenerWithRoot {
                         val extraStep = ExtraStep(project)
 
                         indicator.text = "Building project..."
-                        buildProject(project)
+                        buildProject(project, "build")
 
                         indicator.text = "Fetching latest commits..."
                         extraStep.fetchGit()
 
 
                         indicator.text = "Building again..."
-                        buildProject(project)
+                        buildProject(project, "assembleDebug")
 
                         indicator.text = "Done!"
                         extraStep.maybePlaySound()
@@ -73,25 +73,26 @@ class MySyncListener : GradleSyncListenerWithRoot {
         }
     }
 
-    suspend fun buildProject(project: Project) {
+    suspend fun buildProject(project: Project, task: String) {
         val hasGradle = isGradleProject(project)
 
         if (hasGradle) {
             waitUntilProjectReadyForBuild(project)
 
-            buildWithGradle(project, getGradleSystemId())
+            buildWithGradle(project, getGradleSystemId(), task)
         }
     }
 
     /**
      * Runs Gradle `build` task and waits until it completes before returning.
      */
-    suspend fun buildWithGradle(project: Project, systemId: ProjectSystemId) {
+    suspend fun buildWithGradle(project: Project, systemId: ProjectSystemId, task: String) {
         val projectPath = project.basePath ?: return
         val settings = ExternalSystemTaskExecutionSettings().apply {
             externalProjectPath = projectPath
-            taskNames = listOf("build")
+            taskNames = listOf(task)
             externalSystemIdString = systemId.id
+            scriptParameters = "--profile"
         }
 
         val completion = CompletableDeferred<Unit>()
