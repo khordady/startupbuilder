@@ -15,14 +15,14 @@
     <description><![CDATA[
 <b>StartupBuilder</b> automatically builds and updates your project as soon as it opens in Android Studio and IntelliJ IDEA.<br><br>
 
-<b>Features:</b><br>
+<h3>Features:</h3><br>
 • 🔄 Automatically triggers project build on startup<br>
 • 🧱 Performs Git Fetch & Merge/Rebase after build<br>
 • 🔔 Plays a notification sound when finished (can be disabled in settings)<br>
 • ⚙️ Fully configurable via <i>Settings → Other Settings → StartupBuilder</i><br>
 • 📁 Dedicated <b>Protobuf Tool Window</b> with a <b>Build button for each module</b><br><br>
 
-### 🚀 <b>How It Works</b>
+<h3>How It Works</h3><br>
 1) When you open Android Studio, Gradle starts importing the project.<br>
 2) If the import is successful, the plugin automatically runs Gradle.rebuildAllModules
 (the same task that runs when you press Build or Run for the first time).<br>
@@ -32,21 +32,28 @@ B) Applies the selected action<br>
 4) If something goes wrong (no internet, merge conflict, or uncommitted changes), a notification is shown.<br>
 5) Finally, the plugin tries to assembleDebug the project.
 
-You can check build time and reports in Android Studio.
+<br>You can check build time and reports in Android Studio.<br>
 
-### ☕ <b>Why I Built This Plugin</b>
+<h3> ☕ Why I Built This Plugin</h3>
 The very first successful build in Android Studio takes a long time.
 With this plugin, you can sit back and enjoy a coffee ☕ while everything runs automatically.
 
-For faster builds in Android Studio, add the following lines to your gradle.properties file:
-```kotlin
+<br>For faster builds in Android Studio, add the following lines to your gradle.properties file:<br>
 org.gradle.configuration-cache = true
 org.gradle.caching = true
-```
-Also make sure to enable Gradle’s parallel sync in the settings(all of them).
+<br>
+Also make sure to enable Gradle’s parallel sync in the settings(all of them).<br>
 
+<h3>Protobuf ToolWindow</h3><br>
+
+This plugin also adds a Tool Window (left-side panel) in Android Studio that lists all your .proto files, grouped by module.<br>
+Each module includes buttons for Build, Add New File, Paste File, and Refresh.<br>
+<br>
+Whenever you make changes to your protobuf files, you must use the Build button to regenerate the code based on your updated .proto definitions.<br>
+Note that this Build button only regenerates code for protobuf files—it does not run a full project build.<br>
+<br>
 <a href="https://github.com/khordady/startupbuilder">GitHub Repository</a><br>
-DM on LinkedIn: <a href="https://www.linkedin.com/in/aliforootanseresht/">LinkedIn</a>
+DM Me on LinkedIn: <a href="https://www.linkedin.com/in/aliforootanseresht/">LinkedIn</a><br>
 ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
